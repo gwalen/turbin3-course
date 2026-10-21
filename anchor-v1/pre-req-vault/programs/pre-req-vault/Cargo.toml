@@ -3,7 +3,6 @@ name = "pre-req-vault"
 version = "0.1.0"
 description = "Created with Anchor"
 edition.workspace = true
-rust-version.workspace = true
 
 [lib]
 crate-type = ["cdylib", "lib"]
@@ -21,7 +20,7 @@ custom-panic = []
 
 
 [dependencies]
-anchor-lang = "1.1.2"
+anchor-lang = "1.2.1"
 
 [dev-dependencies]
 litesvm = "0.10.0"
