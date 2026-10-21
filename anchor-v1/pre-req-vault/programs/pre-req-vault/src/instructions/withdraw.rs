@@ -14,24 +14,24 @@ pub struct Withdraw<'info> {
     pub user: Signer<'info>,
 
     #[account(
-    mut,
-    seeds = [b"vault", vault_state.key().as_ref()],
-    bump = vault_state.vault_bump,
-  )]
+        mut,
+        seeds = [b"vault", vault_state.key().as_ref()],
+        bump = vault_state.vault_bump,
+    )]
     pub vault: SystemAccount<'info>,
 
     #[account(
-    seeds = [b"state", user.key().as_ref()],
-    bump = vault_state.state_bump
-  )]
+        seeds = [b"state", user.key().as_ref()],
+        bump = vault_state.state_bump
+    )]
     pub vault_state: Account<'info, VaultState>,
 
     /// CHECK: application account will be initialized by the cpi call to the application program
     #[account(
-    mut,
-    seeds = [b"prereqs", user.key().as_ref()],
-    seeds::program = application_program.key(),
-    bump
+        mut,
+        seeds = [b"prereqs", user.key().as_ref()],
+        seeds::program = application_program.key(),
+        bump
     )]
     pub application_account: UncheckedAccount<'info>,
 
