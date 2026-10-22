@@ -9,7 +9,7 @@ pub use constants::*;
 pub use instructions::*;
 pub use state::*;
 
-declare_id!("D9p5Cny4qB5BRMNqqpkwuGVK3REWf3R6dMfK8XnoLikW");
+declare_id!("TpV16h54trhH57p31woLNpWvYg3opaqqp6VBucNBwhC");
 
 #[program]
 pub mod pre_req_vault {
