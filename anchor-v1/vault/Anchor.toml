@@ -1,0 +1,22 @@
+# Rust tests run in-process on LiteSVM. Do not start a local validator.
+skip_local_validator = true
+
+[toolchain]
+package_manager = "yarn"
+
+[features]
+resolution = true
+skip-lint = false
+
+[programs.localnet]
+vault = "5N1ZxNpBuLqwcuV8YQ8kS58wav56otLnzHuaTbiHcwyM"
+
+[provider]
+cluster = "localnet"
+wallet = "~/.config/solana/id.json"
+
+[scripts]
+test = "cargo test"
+test-rust-logs = "cargo test -- --nocapture"
+
+[hooks]
