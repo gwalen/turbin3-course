@@ -5,3 +5,10 @@
 /target
 
 docs-prv/
+
+.claude/
+.codex/
+.cursor/
+.agents/
+
+skills-lock.json
