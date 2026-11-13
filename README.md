@@ -21,3 +21,19 @@ anchor build
 ### Anchor v2
 
 TBD
+
+## Vault
+
+### Anchor v1
+
+Project path: [`anchor-v1/vault`](anchor-v1/vault)
+
+Each user has a personal vault. They can deposit SOL, withdraw it, and close the vault.
+
+Run commands from that directory:
+
+```bash
+cd anchor-v1/vault
+just build
+just rust
+```
