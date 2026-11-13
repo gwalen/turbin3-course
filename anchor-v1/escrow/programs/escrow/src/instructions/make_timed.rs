@@ -1,0 +1,44 @@
+use crate::{state::timed_escrow::TimedEscrow, utils::errors::EscrowError};
+use anchor_lang::prelude::*;
+use anchor_spl::{
+    associated_token::AssociatedToken,
+    token_interface::{Mint, TokenAccount, TokenInterface},
+};
+
+#[derive(Accounts)]
+#[instruction(seed: u64)]
+pub struct MakeTimed<'info> {
+    #[account(mut)]
+    pub maker: Signer<'info>,
+    #[account(mint::token_program = token_program_a)]
+    pub mint_a: InterfaceAccount<'info, Mint>,
+    #[account(
+        mint::token_program = token_program_b,
+        constraint = mint_a.key() != mint_b.key() @ EscrowError::SameMint,
+    )]
+    pub mint_b: InterfaceAccount<'info, Mint>,
+    #[account(
+        mut,
+        associated_token::mint = mint_a,
+        associated_token::authority = maker,
+        associated_token::token_program = token_program_a,
+    )]
+    pub maker_ata_a: InterfaceAccount<'info, TokenAccount>,
+    #[account(
+        init, payer = maker, space = TimedEscrow::LEN,
+        seeds = [TimedEscrow::SEED_PREFIX, maker.key().as_ref(), &seed.to_le_bytes()],
+        bump,
+    )]
+    pub escrow: Account<'info, TimedEscrow>,
+    #[account(
+        init, payer = maker,
+        associated_token::mint = mint_a,
+        associated_token::authority = escrow,
+        associated_token::token_program = token_program_a,
+    )]
+    pub vault: InterfaceAccount<'info, TokenAccount>,
+    pub associated_token_program: Program<'info, AssociatedToken>,
+    pub token_program_a: Interface<'info, TokenInterface>,
+    pub token_program_b: Interface<'info, TokenInterface>,
+    pub system_program: Program<'info, System>,
+}
