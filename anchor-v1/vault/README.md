@@ -1,57 +1,26 @@
 # Vault
 
-## How it works
+A personal SOL vault. A user deposits SOL, withdraws it, and closes the vault to get everything back.
 
-Each user has a personal vault made of two PDAs.
+Each vault is a PDA derived from the user's wallet, so only that user can use it.
 
-| Account | Seeds | Owner | Holds |
-|---|---|---|---|
-| `vault_state` | `["state", user]` | vault program | `vault_bump`, `state_bump` |
-| `vault` | `["vault", vault_state]` | System Program | deposited lamports |
+## Instructions
 
-`initialize` creates `vault_state` and stores both bumps. The `vault` account is a system account with no data. It comes into existence on the first deposit, when lamports are transferred into it.
+| Instruction | What it does |
+|---|---|
+| `initialize` | Creates the user's vault. |
+| `deposit(amount)` | Moves SOL from the user into the vault. The minimum is 0.01 SOL. |
+| `withdraw(amount)` | Moves SOL back to the user. Afterwards the vault holds 0 or at least 0.01 SOL. |
+| `close` | Sends all SOL back to the user and closes the vault. |
 
-`deposit` moves SOL from the user to the vault. `withdraw` moves SOL back. The vault PDA signs that transfer. `close` sends the vault's remaining lamports to the user and returns the `vault_state` rent.
-
-`user` is a seed of `vault_state`, so a different signer derives a different address. A stranger who passes someone else's vault fails the seeds constraint.
-
-### Minimum balance
-
-The vault balance is always 0 or at least 0.01 SOL (`VaultState::MIN_BALANCE`, 10,000,000 lamports).
-
-A system account with no data must hold either 0 lamports or at least the rent-exempt minimum for 0 bytes, which is 890,880 lamports. A balance between those two values fails in the runtime with `InsufficientFundsForRent`. 0.01 SOL stays above that floor, so the program does not read the Rent sysvar.
-
-- A deposit is at least 0.01 SOL.
-- After a withdrawal, the vault holds exactly 0 or at least 0.01 SOL.
+The 0.01 SOL minimum keeps the vault above the rent-exempt minimum, so a transfer never fails with `InsufficientFundsForRent`.
 
 ## Build and test
 
-This project uses [just](https://just.systems/). Install it with Homebrew or Cargo.
+You need [just](https://just.systems/), Anchor CLI 1.2.1 and Rust 1.97.1.
 
 ```console
-brew install just
-```
-
-```console
-cargo install just
-```
-
-You also need Anchor 1.2.2 and Rust 1.97.1.
-
-Build the program:
-
-```console
-just build
-```
-
-Tests are Rust integration tests that run in-process against [LiteSVM](https://github.com/LiteSVM/litesvm) 0.18.2:
-
-```console
-just rust
-```
-
-To print program logs:
-
-```console
-just rust-logs
+just build      # build the program
+just rust       # run the LiteSVM tests
+just rust-logs  # run the tests and print program logs
 ```
