@@ -1,0 +1,8 @@
+build:
+    NO_DNA=1 anchor build
+
+rust:
+    cargo test
+
+rust-logs:
+    cargo test -- --nocapture
