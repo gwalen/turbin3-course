@@ -1,0 +1,11 @@
+# Compile the on-chain program and IDL.
+build:
+    NO_DNA=1 anchor build
+
+# LiteSVM Rust tests.
+rust: build
+    anchor test --skip-build
+
+# Run Rust tests with logs.
+rust-logs: build
+    anchor test --skip-build --script test-rust-logs
